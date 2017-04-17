@@ -1,0 +1,67 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:mvc="http://www.springframework.org/schema/mvc"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+        <context:component-scan base-package="het.springapp" />
+        
+        <tx:annotation-driven/>
+        
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                <property name="prefix">
+                        <value>/</value>
+                </property>
+                <property name="suffix">
+                        <value>.jsp</value>
+                </property>
+        </bean>
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    		<property name="url" value="jdbc:mysql://localhost:3306/test" />
+    		<property name="username" value="root" />
+    		<property name="password" value="" />
+  		</bean>
+        
+         <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    		<property name="dataSource" ref="dataSource"></property>
+     		<property name="annotatedClasses">
+	            <list>
+	            	<value>het.springapp.model.Note</value>
+	                <value>het.springapp.model.Person</value>
+                        <value>het.springapp.model.User</value>
+	            </list>
+        	</property>
+		    <property name="hibernateProperties">
+		      <props>
+		        <prop 
+		         key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+		        <prop key="hibernate.show_sql">true</prop>
+		      </props>
+		    </property>
+  		</bean>
+   <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager" p:sessionFactory-ref="sessionFactory">
+  </bean>
+  
+<context:annotation-config/> 
+
+        <mvc:annotation-driven/>
+   
+        <mvc:resources mapping="/resources/css/**" location="/resources/css/"/>
+         <mvc:resources mapping="/resources/images/**" location="/resources/images/"/>
+         <mvc:resources mapping="/resources/images/**/**/" location="/resources/images/"/>
+          <mvc:resources mapping="/resources/themes/**" location="/resources/themes/"/>
+          <mvc:resources mapping="/resources/themes/images/**" location="/resources/themes/images/"/>
+		<mvc:resources mapping="/resources/js/**" location="/resources/js/"/>
+		<mvc:resources mapping="/resources/js/app/**/**/" location="/resources/js/app/"/>       
+</beans>
